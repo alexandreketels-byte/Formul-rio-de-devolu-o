@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formulário de Devolução — Dis Comércio</title>
+<style>
+:root{--bg:#f3f5f9;--card:#fff;--ink:#1b2333;--mut:#667085;--line:#e1e5ee;--brand:#0b3d91;--brand2:#1d6fe0;--ok:#127a46;--bad:#c0392b;--warn:#b26a00}
+@media (prefers-color-scheme:dark){:root{--bg:#10141c;--card:#181e2a;--ink:#e8ecf4;--mut:#93a0b8;--line:#2a3345;--brand:#5b9bff;--brand2:#3d86f5}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:linear-gradient(135deg,#0b3d91,#1d6fe0);color:#fff;padding:18px 16px}
+header .in{max-width:860px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+header h1{margin:0;font-size:20px} header p{margin:2px 0 0;opacity:.85;font-size:13px}
+.lnk{background:rgba(255,255,255,.18);color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:13px}
+main{max-width:860px;margin:16px auto;padding:0 16px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.card h2{margin:0 0 12px;font-size:15px;color:var(--brand);text-transform:uppercase;letter-spacing:.4px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:4px;font-weight:600}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--brand2);border-color:transparent}
+textarea{min-height:90px;resize:vertical}
+.full{grid-column:1/-1}
+.note{font-size:12.5px;color:var(--mut);margin:0 0 10px}
+.item{display:grid;grid-template-columns:1.3fr .7fr 1fr 1fr 34px;gap:8px;align-items:end;margin-bottom:8px}
+.item .sub{padding:10px 4px;font-weight:600;text-align:right;white-space:nowrap}
+.item .hd{font-size:11.5px;color:var(--mut);font-weight:600}
+@media(max-width:600px){.item{grid-template-columns:1fr 1fr;padding:10px;border:1px solid var(--line);border-radius:8px}.item .sub{text-align:left}}
+.x{background:none;border:0;color:var(--bad);font-size:20px;cursor:pointer;padding:6px}
+.btn{background:var(--brand2);color:#fff;border:0;padding:12px 18px;border-radius:9px;font:inherit;font-weight:600;cursor:pointer}
+.btn.sec{background:transparent;color:var(--brand);border:1px solid var(--brand)}
+.btn.bad{background:var(--bad)} .btn:disabled{opacity:.6;cursor:wait}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+@media(max-width:600px){.sum{grid-template-columns:1fr}}
+.sum div{background:var(--bg);border-radius:10px;padding:10px}
+.sum small{display:block;color:var(--mut);font-size:12px} .sum b{font-size:18px}
+.bank{background:var(--bg);border-left:4px solid var(--brand2);padding:12px;border-radius:8px;white-space:pre-line;font-size:14px}
+.msg{padding:12px;border-radius:8px;margin-top:12px;font-weight:600}
+.msg.ok{background:#e6f5ec;color:var(--ok)} .msg.err{background:#fdeceb;color:var(--bad)}
+.hide{display:none!important}
+/* modal */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
+.modal{background:var(--card);border-radius:14px;padding:20px;max-width:420px;width:100%;max-height:90vh;overflow:auto}
+.modal.wide{max-width:720px}
+/* admin */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--mut);font-size:12px;text-transform:uppercase}
+tr.r{cursor:pointer} tr.r:hover{background:var(--bg)}
+.tag{padding:2px 8px;border-radius:99px;font-size:11.5px;font-weight:700;background:var(--line)}
+.tag.Nova{background:#e3eeff;color:#1d4fb3}.tag.Em\ análise{background:#fff1d6;color:var(--warn)}.tag.Coleta\ agendada{background:#efe3ff;color:#6b2fb3}.tag.Concluída{background:#e6f5ec;color:var(--ok)}.tag.Cancelada{background:#fdeceb;color:var(--bad)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tools input,.tools select{width:auto;flex:1;min-width:140px}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:6px 10px;font-size:14px;margin-bottom:12px}.kv b{color:var(--mut);font-weight:600}
+@media(max-width:600px){.kv{grid-template-columns:1fr}.kv b{margin-top:6px}}
+.scroll{overflow-x:auto}
+</style>
+</head>
+<body>
+<header><div class="in">
+  <div><h1>Formulário de Devolução</h1><p>Dis Comércio de Eletrodoméstico</p></div>
+  <button class="lnk" id="btnAdmin">🔒 Área administrativa</button>
+</div></header>
+
+<main>
+<!-- ================= FORMULÁRIO PÚBLICO ================= -->
+<div id="pub">
+<form id="f" autocomplete="off">
+  <div class="card"><h2>1 · Identificação e nota fiscal</h2>
+    <div class="grid">
+      <div><label>Nome do cliente / parceiro *</label><input id="cliente" required></div>
+      <div><label>Nº da nota fiscal *</label><input id="nf" inputmode="numeric" required></div>
+    </div>
+  </div>
+
+  <div class="card"><h2>2 · Produtos a devolver</h2>
+    <p class="note">O código do produto se encontra na nota fiscal. Informe o código, a quantidade e o valor unitário de cada item (até 12 itens).</p>
+    <div id="itens"></div>
+    <button type="button" class="btn sec" id="addItem">+ Adicionar item</button>
+  </div>
+
+  <div class="card"><h2>3 · Taxa de devolução</h2>
+    <p class="note">A taxa é referente ao frete de ida e volta do produto.</p>
+    <div class="grid">
+      <div><label>UF do destinatário da nota fiscal *</label><select id="uf" required></select></div>
+      <div><label>Responsável pela taxa *</label><select id="resp" required></select></div>
+      <div class="full"><label>Forma de pagamento sobre o valor da taxa *</label><select id="pgto" required></select></div>
+    </div>
+    <div class="sum">
+      <div><small>Valor dos itens</small><b id="sTotal">R$ 0,00</b></div>
+      <div><small>% sobre valor devolvido</small><b id="sPct">—</b></div>
+      <div><small>Valor da taxa</small><b id="sTaxa">R$ 0,00</b></div>
+    </div>
+  </div>
+
+  <div class="card"><h2>4 · Troca e condição do produto</h2>
+    <div class="grid">
+      <div><label>Haverá troca de produto? *</label><select id="troca" required></select></div>
+      <div><label>Produto está *</label><select id="cond" required></select></div>
+    </div>
+  </div>
+
+  <div class="card"><h2>5 · Motivo e coleta</h2>
+    <div class="grid">
+      <div class="full"><label>Motivo da devolução (detalhado) *</label><textarea id="motivo" required></textarea></div>
+      <div class="full"><label>Nome e contato do responsável para o agendamento da coleta *</label><input id="contato" placeholder="Ex.: Maria – (61) 99999-9999" required></div>
+    </div>
+  </div>
+
+  <div class="card"><h2>Dados bancários para pagamento da taxa</h2>
+    <div class="bank">DIS COMÉRCIO DE ELETRODOMÉSTICO SA
+Banco: Bradesco
+Agência: 0545
+Conta corrente: 235327-0
+Chave PIX (CNPJ): 23.209.013/0012-23</div>
+  </div>
+
+  <button class="btn" id="enviar" type="submit">Enviar solicitação</button>
+  <div id="res"></div>
+</form>
+</div>
+
+<!-- ================= ÁREA ADMIN ================= -->
+<div id="adm" class="hide">
+  <div class="card">
+    <div class="tools">
+      <input id="busca" placeholder="Buscar protocolo, NF, cliente…">
+      <select id="fStatus"><option value="">Todos os status</option></select>
+      <button class="btn sec" id="btnCsv">Exportar CSV</button>
+      <button class="btn sec" id="btnRef">Atualizar</button>
+      <button class="btn sec" id="btnSair">Sair</button>
+    </div>
+    <div class="scroll"><table><thead><tr><th>Protocolo</th><th>Data</th><th>Cliente</th><th>NF</th><th>UF</th><th>Taxa</th><th>Status</th></tr></thead><tbody id="tb"></tbody></table></div>
+    <p class="note" id="cnt" style="margin-top:10px"></p>
+  </div>
+</div>
+</main>
+
+<div id="ovPin" class="ov hide"><div class="modal">
+  <h2 style="margin-top:0">Acesso administrativo</h2>
+  <label>PIN</label><input id="pin" type="password" inputmode="numeric" autocomplete="off">
+  <div id="pinErr" class="msg err hide"></div>
+  <div style="display:flex;gap:8px;margin-top:14px"><button class="btn" id="pinOk">Entrar</button><button class="btn sec" id="pinCancel">Cancelar</button></div>
+</div></div>
+
+<div id="ovDet" class="ov hide"><div class="modal wide" id="det"></div></div>
+
+<script>
+// ====== CONFIGURAÇÃO ======
+const API_URL = 'https://script.google.com/macros/s/AKfycbyp7GExNhv43ZkwFk9iTMmwcqmO2yBc9HfyOEBtA7eu5VrX25oXKPvivRuVnlTx6IXMFw/exec'; // URL /exec do Apps Script
+
+const TAXAS = {AC:['Acre',.1],AL:['Alagoas',.07],AP:['Amapá',.105],AM:['Amazonas',.1],BA:['Bahia',.094],CE:['Ceará',.074],DF:['Distrito Federal',.075],ES:['Espírito Santo',.052],GO:['Goiás',.075],MA:['Maranhão',.08],MT:['Mato Grosso',.075],MS:['Mato Grosso do Sul',.075],MG:['Minas Gerais',.052],PA:['Pará',.1],PB:['Paraíba',.076],PR:['Paraná',.058],PE:['Pernambuco',.09],PI:['Piauí',.1],RJ:['Rio de Janeiro',.052],RN:['Rio Grande do Norte',.08],RS:['Rio Grande do Sul',.062],RO:['Rondônia',.1],RR:['Roraima',.1],SC:['Santa Catarina',.06],SP:['São Paulo',.06],SE:['Sergipe',.07],TO:['Tocantins',.088]};
+const RESP=['PARCEIRO','CONSULTOR'];
+const PGTO=['PIX','ABATIMENTO EM CRÉDITO NO VALOR DA DEVOLUÇÃO','RT','COMISSÃO'];
+const SN=['NÃO','SIM'];
+const COND=['LACRADO','CAIXA FOI ABERTA','FOI INSTALADO'];
+
+const $=id=>document.getElementById(id);
+const brl=n=>(n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const num=s=>{s=String(s||'').trim();if(!s)return 0;if(s.includes(','))s=s.replace(/\./g,'').replace(',','.');return parseFloat(s)||0};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function opts(el,list,ph){el.innerHTML=(ph?`<option value="">${ph}</option>`:'')+list.map(v=>`<option>${esc(v)}</option>`).join('')}
+
+opts($('resp'),RESP,'Selecione…');opts($('pgto'),PGTO,'Selecione…');opts($('troca'),SN);opts($('cond'),COND,'Selecione…');
+$('uf').innerHTML='<option value="">Selecione…</option>'+Object.entries(TAXAS).sort((a,b)=>a[1][0].localeCompare(b[1][0])).map(([k,v])=>`<option value="${k}">${k} — ${v[0]}</option>`).join('');
+
+// ====== ITENS ======
+function addItem(){
+  if($('itens').children.length>=12)return;
+  const d=document.createElement('div');d.className='item';
+  d.innerHTML=`<div><label>Código do produto</label><input class="cod"></div>
+  <div><label>Qtd.</label><input class="qtd" inputmode="numeric"></div>
+  <div><label>Valor unitário (R$)</label><input class="val" inputmode="decimal" placeholder="0,00"></div>
+  <div class="sub">R$ 0,00</div><button type="button" class="x" title="Remover">×</button>`;
+  d.querySelector('.x').onclick=()=>{d.remove();if(!$('itens').children.length)addItem();calc()};
+  d.addEventListener('input',calc);$('itens').appendChild(d);
+}
+function itens(){return [...$('itens').children].map(d=>({codigo:d.querySelector('.cod').value.trim(),qtd:num(d.querySelector('.qtd').value),valor:num(d.querySelector('.val').value),el:d}))}
+function calc(){
+  let total=0;
+  itens().forEach(i=>{const s=i.qtd*i.valor;i.el.querySelector('.sub').textContent=brl(s);if(i.codigo)total+=s});
+  const uf=$('uf').value,pct=uf?TAXAS[uf][1]:0;
+  $('sTotal').textContent=brl(total);$('sPct').textContent=uf?(pct*100).toFixed(1).replace('.',',')+'%':'—';$('sTaxa').textContent=brl(Math.round(total*pct*100)/100);
+}
+$('addItem').onclick=addItem;$('uf').onchange=calc;addItem();
+
+// ====== ENVIO ======
+async function api(body){
+  const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});
+  return r.json();
+}
+$('f').onsubmit=async e=>{
+  e.preventDefault();
+  const its=itens().filter(i=>i.codigo&&i.qtd>0);
+  const res=$('res');res.innerHTML='';
+  if(!its.length){res.innerHTML='<div class="msg err">Informe ao menos um item com código e quantidade.</div>';return}
+  const btn=$('enviar');btn.disabled=true;btn.textContent='Enviando…';
+  try{
+    const out=await api({action:'submit',data:{
+      cliente:$('cliente').value,nf:$('nf').value,uf:$('uf').value,
+      itens:its.map(({codigo,qtd,valor})=>({codigo,qtd,valor})),
+      responsavelTaxa:$('resp').value,formaPagamento:$('pgto').value,troca:$('troca').value,
+      motivo:$('motivo').value,contato:$('contato').value,condicao:$('cond').value}});
+    if(out.ok){
+      res.innerHTML=`<div class="msg ok">Solicitação enviada! Protocolo <b>${esc(out.protocolo)}</b> — taxa de ${brl(out.valorTaxa)}. Guarde o número do protocolo.</div>`;
+      $('f').reset();$('itens').innerHTML='';addItem();calc();window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+    }else res.innerHTML=`<div class="msg err">${esc(out.error||'Erro ao enviar')}</div>`;
+  }catch(err){res.innerHTML='<div class="msg err">Falha de conexão. Tente novamente.</div>'}
+  btn.disabled=false;btn.textContent='Enviar solicitação';
+};
+
+// ====== ADMIN ======
+let PIN='',ROWS=[],STAT=[];
+$('btnAdmin').onclick=()=>{ if(PIN){showAdm()} else {$('ovPin').classList.remove('hide');$('pin').value='';$('pin').focus()} };
+$('pinCancel').onclick=()=>$('ovPin').classList.add('hide');
+$('pin').onkeydown=e=>{if(e.key==='Enter')$('pinOk').click()};
+$('pinOk').onclick=async()=>{
+  const p=$('pin').value;const er=$('pinErr');er.classList.add('hide');
+  try{
+    const out=await api({action:'login',pin:p});
+    if(!out.ok){er.textContent=out.error||'PIN inválido';er.classList.remove('hide');return}
+    PIN=p;STAT=out.statuses;$('ovPin').classList.add('hide');showAdm();
+  }catch(e){er.textContent='Falha de conexão';er.classList.remove('hide')}
+};
+$('btnSair').onclick=()=>{PIN='';ROWS=[];$('adm').classList.add('hide');$('pub').classList.remove('hide');$('btnAdmin').textContent='🔒 Área administrativa'};
+async function showAdm(){
+  $('pub').classList.add('hide');$('adm').classList.remove('hide');$('btnAdmin').textContent='🔓 Administrador';
+  $('fStatus').innerHTML='<option value="">Todos os status</option>'+STAT.map(s=>`<option>${esc(s)}</option>`).join('');
+  await load();
+}
+async function load(){
+  $('tb').innerHTML='<tr><td colspan="7">Carregando…</td></tr>';
+  const out=await api({action:'list',pin:PIN});
+  if(!out.ok){alert(out.error);return $('btnSair').click()}
+  ROWS=out.rows;render();
+}
+function render(){
+  const q=$('busca').value.toLowerCase(),st=$('fStatus').value;
+  const list=ROWS.filter(r=>(!st||r.Status===st)&&(!q||[r.Protocolo,r['Nota Fiscal'],r.Cliente].join(' ').toLowerCase().includes(q)));
+  $('tb').innerHTML=list.map(r=>`<tr class="r" data-p="${esc(r.Protocolo)}"><td>${esc(r.Protocolo)}</td><td>${new Date(r['Data/Hora']).toLocaleDateString('pt-BR')}</td><td>${esc(r.Cliente)}</td><td>${esc(r['Nota Fiscal'])}</td><td>${esc(r.UF)}</td><td>${brl(+r['Valor Taxa'])}</td><td><span class="tag ${esc(r.Status)}">${esc(r.Status)}</span></td></tr>`).join('')||'<tr><td colspan="7">Nenhuma solicitação.</td></tr>';
+  $('cnt').textContent=list.length+' solicitação(ões)';
+  $('tb').querySelectorAll('tr.r').forEach(tr=>tr.onclick=()=>detail(tr.dataset.p));
+}
+$('busca').oninput=render;$('fStatus').onchange=render;$('btnRef').onclick=load;
+function detail(p){
+  const r=ROWS.find(x=>x.Protocolo===p);if(!r)return;
+  let its=[];try{its=JSON.parse(r['Itens JSON'])}catch(e){}
+  $('det').innerHTML=`<h2 style="margin-top:0">${esc(r.Protocolo)}</h2>
+  <div class="kv">
+   <b>Data</b><span>${new Date(r['Data/Hora']).toLocaleString('pt-BR')}</span>
+   <b>Cliente</b><span>${esc(r.Cliente)}</span><b>Nota fiscal</b><span>${esc(r['Nota Fiscal'])}</span>
+   <b>Itens</b><span>${its.map(i=>`${esc(i.codigo)} — ${i.qtd} × ${brl(i.valor)} = ${brl(i.qtd*i.valor)}`).join('<br>')}</span>
+   <b>Valor dos itens</b><span>${brl(+r['Valor Itens'])}</span>
+   <b>UF / %</b><span>${esc(r.UF)} / ${(r['% Taxa']*100).toFixed(1).replace('.',',')}%</span>
+   <b>Valor da taxa</b><span><b style="color:var(--ink)">${brl(+r['Valor Taxa'])}</b></span>
+   <b>Responsável taxa</b><span>${esc(r['Responsável Taxa'])}</span><b>Forma pagamento</b><span>${esc(r['Forma Pagamento'])}</span>
+   <b>Troca</b><span>${esc(r.Troca)}</span><b>Condição</b><span>${esc(r['Condição Produto'])}</span>
+   <b>Motivo</b><span>${esc(r.Motivo)}</span><b>Contato coleta</b><span>${esc(r['Contato Coleta'])}</span></div>
+  <label>Status</label><select id="dSt">${STAT.map(s=>`<option ${s===r.Status?'selected':''}>${esc(s)}</option>`).join('')}</select>
+  <label style="margin-top:10px">Observação interna</label><textarea id="dObs">${esc(r['Obs Admin'])}</textarea>
+  <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap"><button class="btn" id="dSave">Salvar</button><button class="btn sec" id="dClose">Fechar</button><button class="btn bad" id="dDel" style="margin-left:auto">Excluir</button></div>`;
+  $('ovDet').classList.remove('hide');
+  $('dClose').onclick=()=>$('ovDet').classList.add('hide');
+  $('dSave').onclick=async()=>{const o=await api({action:'update',pin:PIN,protocolo:p,status:$('dSt').value,obsAdmin:$('dObs').value});if(!o.ok)return alert(o.error);r.Status=$('dSt').value;r['Obs Admin']=$('dObs').value;$('ovDet').classList.add('hide');render()};
+  $('dDel').onclick=async()=>{if(!confirm('Excluir '+p+' definitivamente?'))return;const o=await api({action:'delete',pin:PIN,protocolo:p});if(!o.ok)return alert(o.error);ROWS=ROWS.filter(x=>x.Protocolo!==p);$('ovDet').classList.add('hide');render()};
+}
+$('btnCsv').onclick=()=>{
+  if(!ROWS.length)return;const h=Object.keys(ROWS[0]).filter(k=>k!=='Itens JSON');
+  const c=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const csv='﻿'+h.map(c).join(';')+'\n'+ROWS.map(r=>h.map(k=>c(r[k])).join(';')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='devolucoes.csv';a.click();
+};
+</script>
+</body>
+</html>
