@@ -187,8 +187,10 @@ $('addItem').onclick=addItem;$('uf').onchange=calc;addItem();
 
 // ====== ENVIO ======
 async function api(body){
+  if(!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(API_URL))throw new Error('API_URL não configurada: cole no index.html a URL /exec do Web App.');
   const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});
-  return r.json();
+  const t=await r.text();
+  try{return JSON.parse(t)}catch(e){throw new Error('O Web App não devolveu JSON. Confira se a implantação está com acesso "Qualquer pessoa" e se foi criada uma nova versão.')}
 }
 $('f').onsubmit=async e=>{
   e.preventDefault();
@@ -206,7 +208,7 @@ $('f').onsubmit=async e=>{
       res.innerHTML=`<div class="msg ok">Solicitação enviada! Protocolo <b>${esc(out.protocolo)}</b> — taxa de ${brl(out.valorTaxa)}. Guarde o número do protocolo.</div>`;
       $('f').reset();$('itens').innerHTML='';addItem();calc();window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
     }else res.innerHTML=`<div class="msg err">${esc(out.error||'Erro ao enviar')}</div>`;
-  }catch(err){res.innerHTML='<div class="msg err">Falha de conexão. Tente novamente.</div>'}
+  }catch(err){res.innerHTML='<div class="msg err">Falha ao enviar: '+esc(err.message)+'</div>'}
   btn.disabled=false;btn.textContent='Enviar solicitação';
 };
 
@@ -221,7 +223,7 @@ $('pinOk').onclick=async()=>{
     const out=await api({action:'login',pin:p});
     if(!out.ok){er.textContent=out.error||'PIN inválido';er.classList.remove('hide');return}
     PIN=p;STAT=out.statuses;$('ovPin').classList.add('hide');showAdm();
-  }catch(e){er.textContent='Falha de conexão';er.classList.remove('hide')}
+  }catch(e){er.textContent='Falha: '+e.message;er.classList.remove('hide')}
 };
 $('btnSair').onclick=()=>{PIN='';ROWS=[];$('adm').classList.add('hide');$('pub').classList.remove('hide');$('btnAdmin').textContent='🔒 Área administrativa'};
 async function showAdm(){
