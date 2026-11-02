@@ -108,12 +108,8 @@ tr.r{cursor:pointer} tr.r:hover{background:var(--bg)}
     </div>
   </div>
 
-  <div class="card"><h2>Dados bancários para pagamento da taxa</h2>
-    <div class="bank">DIS COMÉRCIO DE ELETRODOMÉSTICO SA
-Banco: Bradesco
-Agência: 0545
-Conta corrente: 235327-0
-Chave PIX (CNPJ): 23.209.013/0012-23</div>
+  <div class="card"><h2>Pagamento da taxa</h2>
+    <div class="bank">Para efetuar o pagamento da taxa, <b>solicite os dados bancários ao SAC da DIS</b>, informando o número do protocolo recebido após o envio desta solicitação.</div>
   </div>
 
   <button class="btn" id="enviar" type="submit">Enviar solicitação</button>
@@ -205,7 +201,7 @@ $('f').onsubmit=async e=>{
       responsavelTaxa:$('resp').value,formaPagamento:$('pgto').value,troca:$('troca').value,
       motivo:$('motivo').value,contato:$('contato').value,condicao:$('cond').value}});
     if(out.ok){
-      res.innerHTML=`<div class="msg ok">Solicitação enviada! Protocolo <b>${esc(out.protocolo)}</b> — taxa de ${brl(out.valorTaxa)}. Guarde o número do protocolo.</div>`;
+      res.innerHTML=`<div class="msg ok">Solicitação enviada! Protocolo <b>${esc(out.protocolo)}</b> — taxa de ${brl(out.valorTaxa)}. Guarde o número do protocolo e solicite os dados bancários ao SAC da DIS para pagar a taxa.</div>`;
       $('f').reset();$('itens').innerHTML='';addItem();calc();window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
     }else res.innerHTML=`<div class="msg err">${esc(out.error||'Erro ao enviar')}</div>`;
   }catch(err){res.innerHTML='<div class="msg err">Falha ao enviar: '+esc(err.message)+'</div>'}
